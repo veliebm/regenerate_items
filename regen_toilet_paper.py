@@ -23,6 +23,10 @@ PASSWORD_CSS_SELECTOR = "input[type='password']"
 PLACE_ORDER_CSS_SELECTOR = "input[type='placeYourOrder1']"
 TIMEOUT_TIME = 10
 YOU_DO_THE_REST_MESSAGE = "That's as far as I go. If necessary, please complete 2 factor authentication and finish your purchase. Press enter to quit."
+KEY_NOT_FOUND_ERROR_MESSAGE = "Please generate a key before running this script"
+ENCRYPTED_PASSWORD_NOT_FOUND_ERROR_MESSAGE = (
+    "Please refresh your credentials before running this script"
+)
 
 
 def main():
@@ -49,9 +53,16 @@ def main():
 
 def get_password() -> str:
     """Returns the decrypted password for the user using their stored encrypted password."""
-    key = pathlib.Path(KEY_PATH).read_text()
+    try:
+        key = pathlib.Path(KEY_PATH).read_text()
+    except FileNotFoundError:
+        raise RuntimeError(KEY_NOT_FOUND_ERROR_MESSAGE)
+    try:
+        encrypted_password = pathlib.Path(ENCRYPTED_PASSWORD_PATH).read_text()
+    except FileNotFoundError:
+        raise RuntimeError(ENCRYPTED_PASSWORD_NOT_FOUND_ERROR_MESSAGE)
+
     reference_key = fernet.Fernet(key)
-    encrypted_password = pathlib.Path(ENCRYPTED_PASSWORD_PATH).read_text()
     return str(reference_key.decrypt(encrypted_password), encoding=ENCODING)
 
 
