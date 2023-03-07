@@ -8,9 +8,7 @@ import getpass
 
 KEY_PATH = "key"
 ENCRYPTED_PASSWORD_PATH = "/tmp/encrypted_amazon_password"
-PASSWORD_PROMPT = (
-    "Please enter your password. This will be deleted from the system upon reboot: "
-)
+PASSWORD_PROMPT = "Please enter your Amazon password. This will be deleted from the system upon reboot: "
 ENCODING = "utf-8"
 
 
